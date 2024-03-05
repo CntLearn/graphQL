@@ -4,7 +4,8 @@
   "description": "Learning Graph QL API's",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon ./src/index.js",
+    "dev": "nodemon ./src/index2.js"
   },
   "keywords": [],
   "author": "Zain Ahmad Chattha",

@@ -10,6 +10,19 @@ const resolvers = {
     },
     authors: () => authors,
     reviews: () => reviews,
+    
+
+    // for fetching individual values.
+    game(parent, args) {
+      return games.find(game=>game.id===args.id)
+    },
+    review(parent, args) {
+      return reviews.find(game=>game.id===args.id)
+    },
+    author(parent, args) {
+      return authors.find(game=>game.id===args.id)
+    }
+
   },
 };
 

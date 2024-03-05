@@ -30,6 +30,11 @@ const typeDefs = `#graphQL
         games: [Game]
         reviews: [Review]
         authors: [Author]
+
+        #to get individual data.
+        game(id:ID!): Game
+        review(id:ID!): Review
+        author(id:ID!): Author
     }
 `;
 

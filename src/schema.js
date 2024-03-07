@@ -9,18 +9,22 @@ const typeDefs = `#graphQL
         id:ID! # ! field mean that this field is required.
         title:String!
         platform:[String!]! # ! field mean that this array is required but there can be null values. we don't set the value to important., if set with the type then value will be required.
+        reviews:[Review!]
     }
 
     type Review { 
         id:ID!
         rating:Int!
         content:String!
+        game:Game!
+        author:Author!
     }
 
     type Author{
         id:ID!
         name:String!
         verified:Boolean!
+        reviews:[Review!]   #It can be a review or not but if it is, then won't be null.
     }
 
 #query is must define. query mean what kind of data will be returned on a request.
@@ -32,9 +36,14 @@ const typeDefs = `#graphQL
         authors: [Author]
 
         #to get individual data.
+
         game(id:ID!): Game
         review(id:ID!): Review
         author(id:ID!): Author
+    }
+
+    type Mutation {
+        deleteGame(id:ID!):[Game]
     }
 `;
 

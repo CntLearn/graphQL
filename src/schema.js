@@ -44,6 +44,19 @@ const typeDefs = `#graphQL
 
     type Mutation {
         deleteGame(id:ID!):[Game]
+        addGame(game:addGameInput!):Game
+        updateGame(id:ID!, edits:updateGameInput!):Game
+    }
+
+    # we can define type of input values in objects.
+    input addGameInput {
+        title: String!
+        platform: [String!]!
+    }
+# duplicate input is because of in update args can be optional.
+    input updateGameInput {
+        title: String
+        platform: [String!]
     }
 `;
 

@@ -1,4 +1,4 @@
-const { games, authors, reviews } = require("./_db");
+let { games, authors, reviews } = require("./_db");
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
@@ -47,6 +47,28 @@ const resolvers = {
   Mutation: {
     deleteGame(parent, args) {
       return games.filter((game) => game.id !== args.id);
+    },
+    addGame(_, args) {
+      const game = {
+        ...args.game,
+        id: Math.floor(Math.random() * 1000).toString(),
+      };
+      games.push(game);
+
+      return game;
+    },
+
+    updateGame(_, args) {
+      let game = {};
+      games = games.map((g) => {
+        if (g.id === args.id) {
+          game = { ...g, ...args.edits };
+          return game;
+        }
+        return g;
+      });
+
+      return game;
     },
   },
 };

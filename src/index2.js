@@ -1,10 +1,11 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const { typeDefs } = require("./schema");
 const { resolvers } = require("./resolvers");
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 // server setup.
 // it take a object with the two parameters, typeDefinitions and resolvers.
 const server = new ApolloServer({

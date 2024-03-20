@@ -17,6 +17,59 @@ const getTestData = async () => {
     });
 };
 
+const schemas = `
+type User {
+    id:String!
+    name:String!
+    phone:String!
+    address:String!
+    email:String!
+}
+type Todo {
+    id:ID!
+    title:String!
+    completed:Boolean
+    user:User
+}
+
+type Query{
+    getAllTodos:[Todo],
+    getApiTodos:[Todo],
+    testAPI:[Todo],
+    getAllUsers:[User],
+    getTodosWithUsers(id:ID):[Todo],
+    getUser(id:ID!):User
+}
+`;
+
+const resolvers = {
+  Todo: {
+    user: async (todo) =>
+      (await axios.get(`https://jsonplaceholder.typicode.com/users/${todo.id}`))
+        .data,
+  },
+  Query: {
+    getAllTodos: () => [
+      { id: 1, title: "Todos 1", completed: false },
+      { id: 1, title: "Todos 1", completed: false },
+    ],
+
+    getApiTodos: async () =>
+      (await axios.get("https://jsonplaceholder.typicode.com/todos")).data,
+
+    testAPI: getTestData,
+
+    getAllUsers: async () =>
+      (await axios.get("https://jsonplaceholder.typicode.com/users")).data,
+    getTodosWithUsers: async (parent, { id }) =>
+      (await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`))
+        .data,
+    getUser: async (parent, { id }) =>
+      (await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`))
+        .data,
+  },
+};
+
 async function start() {
   const app = express();
 
@@ -25,60 +78,8 @@ async function start() {
   // if we want to get some data then it will be added into query, and if we want to push something then we will do mutation
 
   const server = new ApolloServer({
-    typeDefs: `
-        type User {
-            id:String!
-            name:String!
-            phone:String!
-            address:String!
-            email:String!
-        }
-        type Todo {
-            id:ID!
-            title:String!
-            completed:Boolean
-            user:User
-        }
-        
-        type Query{
-            getAllTodos:[Todo],
-            getApiTodos:[Todo],
-            testAPI:[Todo],
-            getAllUsers:[User],
-            getTodosWithUsers(id:ID):[Todo],
-            getUser(id:ID!):User
-        }
-    `,
-    resolvers: {
-      Todo: {
-        user: async (todo) =>
-          (
-            await axios.get(
-              `https://jsonplaceholder.typicode.com/users/${todo.id}`
-            )
-          ).data,
-      },
-      Query: {
-        getAllTodos: () => [
-          { id: 1, title: "Todos 1", completed: false },
-          { id: 1, title: "Todos 1", completed: false },
-        ],
-
-        getApiTodos: async () =>
-          (await axios.get("https://jsonplaceholder.typicode.com/todos")).data,
-
-        testAPI: getTestData,
-
-        getAllUsers: async () =>
-          (await axios.get("https://jsonplaceholder.typicode.com/users")).data,
-        getTodosWithUsers: async (parent, { id }) =>
-          (await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`))
-            .data,
-        getUser: async (parent, { id }) =>
-          (await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`))
-            .data,
-      },
-    },
+    typeDefs: schemas,
+    resolvers,
   });
 
   app.use(bodyParser.json());
